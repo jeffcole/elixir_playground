@@ -7,7 +7,7 @@ defmodule PartialApplication do
     fn -> product(2, b) end
   end
 
-  def partial_product_capture_error(b) do
+  def partial_product_capture_error(_b) do
     # &product(2, b)
 
     # ** (CompileError) lib/partial_application.ex:11: invalid args for &,
@@ -18,18 +18,20 @@ defmodule PartialApplication do
   def partial_product_capture do
     &product(2, &1)
   end
+
+  def run do
+    IO.inspect partial_product_anon(3)
+    # #Function<0.133469699/0 in PartialApplication.partial_product_anon/1>
+    # Note the `/0` for the returned function
+
+    IO.inspect partial_product_anon(3).()
+    # 6
+
+    IO.inspect partial_product_capture()
+    # #Function<1.133469699/1 in PartialApplication.partial_product_capture/0>
+    # Note the `/1` for the returned function
+
+    IO.inspect partial_product_capture().(3)
+    # 6
+  end
 end
-
-IO.inspect PartialApplication.partial_product_anon(3)
-# #Function<0.133469699/0 in PartialApplication.partial_product_anon/1>
-# Note the `/0` for the returned function
-
-IO.inspect PartialApplication.partial_product_anon(3).()
-# 6
-
-IO.inspect PartialApplication.partial_product_capture()
-# #Function<1.133469699/1 in PartialApplication.partial_product_capture/0>
-# Note the `/1` for the returned function
-
-IO.inspect PartialApplication.partial_product_capture().(3)
-# 6
